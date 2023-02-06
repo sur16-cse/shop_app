@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shop_app/providers/cart.dart';
 import 'package:shop_app/providers/products.dart';
+import 'package:shop_app/screens/cart_screen.dart';
 import '../widgets/product_grid.dart';
+import '../widgets/cart_badge.dart';
 
 enum FilterOptions {
   favorites,
@@ -19,7 +22,7 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showFavoritesOnly = false;
   @override
   Widget build(BuildContext context) {
-    // final productsContainer = Provider.of<Products>(context);
+    // final cart = Provider.of<Cart>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
@@ -39,21 +42,31 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               ),
             ],
             onSelected: (FilterOptions selectedValue) => {
-              setState((){
-                if (selectedValue == FilterOptions.favorites)
-                {
+              setState(() {
+                if (selectedValue == FilterOptions.favorites) {
                   _showFavoritesOnly = true;
-                }
-                else
-                {
-                _showFavoritesOnly = false;
+                } else {
+                  _showFavoritesOnly = false;
                 }
               })
             },
-          )
+          ),
+          Consumer<Cart>(
+            builder: (_, cart, ch) => CartBadge(
+              value: cart.itemCount.toString(),
+              child: ch!,
+            ),
+            child: IconButton(
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 15),
+              icon: const Icon(Icons.shopping_cart),
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
+            ),
+          ),
         ],
       ),
-      body:  ProductsGrid(_showFavoritesOnly),
+      body: ProductsGrid(_showFavoritesOnly),
     );
   }
 }
