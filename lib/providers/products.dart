@@ -77,8 +77,11 @@ class Products with ChangeNotifier {
       _items.add(newProduct);
       //_items.insert(0, newProduct); at the start of the list
       notifyListeners();
-      return Future.delayed(Duration(seconds: 3));
-    });
+      return Future.delayed(const Duration(seconds: 3));
+    }).catchError((error){
+      print(error);
+      throw error;
+   });
   }
 
   void updateProduct(String id, Product newProduct) {
