@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 enum AuthMode { Signup, Login }
 
@@ -12,10 +15,7 @@ class AuthScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Container(
@@ -42,8 +42,8 @@ class AuthScreen extends StatelessWidget {
                   Flexible(
                     child: Container(
                       margin: const EdgeInsets.only(bottom: 20.0),
-                      padding:
-                          const EdgeInsets.symmetric(vertical: 8.0, horizontal: 94.0),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 8.0, horizontal: 94.0),
                       transform: Matrix4.rotationZ(-8 * pi / 180)
                         ..translate(-10.0),
                       // ..translate(-10.0),
@@ -100,7 +100,7 @@ class _AuthCardState extends State<AuthCard> {
   var _isLoading = false;
   final _passwordController = TextEditingController();
 
-  void _submit() {
+  Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) {
       // Invalid!
       return;
@@ -111,8 +111,16 @@ class _AuthCardState extends State<AuthCard> {
     });
     if (_authMode == AuthMode.Login) {
       // Log user in
+      await Provider.of<Auth>(context, listen: false).login(
+        _authData['email']!,
+        _authData['password']!,
+      );
     } else {
       // Sign user up
+      await Provider.of<Auth>(context, listen: false).signup(
+        _authData['email']!,
+        _authData['password']!,
+      );
     }
     setState(() {
       _isLoading = false;
@@ -179,7 +187,8 @@ class _AuthCardState extends State<AuthCard> {
                 if (_authMode == AuthMode.Signup)
                   TextFormField(
                     enabled: _authMode == AuthMode.Signup,
-                    decoration: const InputDecoration(labelText: 'Confirm Password'),
+                    decoration:
+                        const InputDecoration(labelText: 'Confirm Password'),
                     obscureText: true,
                     validator: _authMode == AuthMode.Signup
                         ? (value) {
@@ -201,8 +210,8 @@ class _AuthCardState extends State<AuthCard> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8.0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30.0, vertical: 8.0),
                       backgroundColor: Theme.of(context).colorScheme.primary,
                     ),
                     child:
@@ -211,8 +220,8 @@ class _AuthCardState extends State<AuthCard> {
                 TextButton(
                   onPressed: _switchAuthMode,
                   style: TextButton.styleFrom(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 30.0, vertical: 4),
                     foregroundColor: Theme.of(context).colorScheme.primary,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
