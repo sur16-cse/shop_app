@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class Product with ChangeNotifier {
@@ -25,12 +24,12 @@ class Product with ChangeNotifier {
     isFavorite = newValue;
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String token) async {
     final oldStatus = isFavorite;
     isFavorite = !isFavorite;
     notifyListeners();
     final url = Uri.parse(
-        "https://shop-app-d282d-default-rtdb.firebaseio.com/products/$id.json");
+        "https://shop-app-d282d-default-rtdb.firebaseio.com/products/$id.json?auth=$token");
     try {
       final response = await http.patch(
         url,
