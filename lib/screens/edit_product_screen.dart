@@ -146,7 +146,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
           IconButton(
             onPressed: () {
               _saveForm();
-              // Navigator.of(context).pop();
+              Navigator.of(context).pop();
             },
             icon: const Icon(Icons.save),
           ),
