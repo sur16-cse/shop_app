@@ -60,7 +60,7 @@ class AuthScreen extends StatelessWidget {
                         ],
                       ),
                       child: Text(
-                        '![](../../../../../../../Downloads/product-placeholder.png)MyShop',
+                        'MyShop',
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.secondary,
                           fontSize: 50,

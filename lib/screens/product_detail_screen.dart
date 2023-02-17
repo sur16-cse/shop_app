@@ -22,16 +22,19 @@ class ProductDetailScreen extends StatelessWidget {
             Container(
               height: 300,
               width: double.infinity,
-              child: Image.network(
-                loadedProduct.imageUrl,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: loadedProduct.id,
+                child: Image.network(
+                  loadedProduct.imageUrl,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
             const SizedBox(
               height: 10,
             ),
             Container(
-              width:double.infinity,
+              width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Text(
                 '\$${loadedProduct.price}',
@@ -39,8 +42,14 @@ class ProductDetailScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(height: 10,),
-            Text(loadedProduct.description,textAlign: TextAlign.center,softWrap: true,)
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              loadedProduct.description,
+              textAlign: TextAlign.center,
+              softWrap: true,
+            )
           ],
         ),
       ),
