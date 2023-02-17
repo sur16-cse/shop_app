@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
               return Products(
                 auth.token,
                 auth.userId,
-                previousProducts!.items,
+                previousProducts == null ? [] : previousProducts.items,
               );
             }),
         ChangeNotifierProvider(
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
               return Orders(
                 auth.token,
                 auth.userId,
-                previousOrders!.orders,
+                previousOrders == null ? [] : previousOrders.orders,
               );
             }),
       ],
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
           routes: {
             ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             CartScreen.routeName: (ctx) => const CartScreen(),
-            OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+            OrdersScreen.routeName: (ctx) => OrdersScreen(),
             UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
             EditProductScreen.routeName: (ctx) => const EditProductScreen(),
           },

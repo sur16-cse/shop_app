@@ -25,7 +25,7 @@ class Orders with ChangeNotifier {
   final String? authToken;
   final String? userId;
 
-  Orders(this.authToken,this.userId,this._orders);
+  Orders(this.authToken, this.userId, this._orders);
 
   List<OrderItem> get orders {
     return [..._orders];
@@ -38,11 +38,15 @@ class Orders with ChangeNotifier {
     print(json.decode(response.body));
     final List<OrderItem> loadedOrders = [];
     final extractedData = json.decode(response.body) as Map<String, dynamic>;
-
-    extractedData?.forEach((orderId, orderData) {
-      loadedOrders.add(OrderItem(
+    if (extractedData.isEmpty) {
+      return;
+    }
+    extractedData.forEach((orderId, orderData) {
+      loadedOrders.add(
+        OrderItem(
           id: orderId,
           amount: orderData['amount'],
+          dateTime: DateTime.parse(orderData['dateTime']),
           products: (orderData['products'] as List<dynamic>)
               .map((item) => CartItem(
                   id: item.id,
@@ -50,9 +54,10 @@ class Orders with ChangeNotifier {
                   quantity: item.quantity,
                   price: item.price))
               .toList(),
-          dateTime: DateTime.parse(orderData['dateTime'])));
+        ),
+      );
     });
-    _orders=loadedOrders.reversed.toList();
+    _orders = loadedOrders.reversed.toList();
     notifyListeners();
   }
 

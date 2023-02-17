@@ -10,12 +10,12 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = "/user-products";
 
   Future<void> _refreshProducts(BuildContext context) async {
-    Provider.of<Products>(context, listen: false).fetchAndSetProducts(true);
+    await Provider.of<Products>(context, listen: false)
+        .fetchAndSetProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    // final productsData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Your Products'),
@@ -25,7 +25,7 @@ class UserProductsScreen extends StatelessWidget {
               Navigator.of(context).pushNamed(EditProductScreen.routeName);
             },
             icon: const Icon(Icons.add),
-          )
+          ),
         ],
       ),
       drawer: const AppDrawer(),
@@ -38,7 +38,7 @@ class UserProductsScreen extends StatelessWidget {
                 : RefreshIndicator(
                     onRefresh: () => _refreshProducts(context),
                     child: Consumer<Products>(
-                      builder:(ctx,productsData,_)=> Padding(
+                      builder: (ctx, productsData, _) => Padding(
                         padding: const EdgeInsets.all(8),
                         child: ListView.builder(
                           itemBuilder: (ctx, i) => Column(

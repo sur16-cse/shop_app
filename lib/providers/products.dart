@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shop_app/models/http_exception.dart';
 import 'dart:convert';
@@ -25,26 +25,42 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> fetchAndSetProducts([bool filterByUser=false]) async {
-    final filterString=filterByUser?'orderBY="creatorId"&equalTo="$userId"':'';
-    var url = Uri.parse(
-        'https://shop-app-d282d-default-rtdb.firebaseio.com/products.json?auth=$authToken&$filterString');
+  Future<void> fetchAndSetProducts([bool filterByUser = false]) async {
+    var _params;
+    if (filterByUser==true) {
+      _params = <String, String>{
+        'auth': authToken!,
+        'orderBy': json.encode("creatorId"),
+        'equalTo': json.encode(userId),
+      };
+    }
+    if (filterByUser == false) {
+      _params = <String, String>{
+        'auth': authToken!,
+      };
+    }
+    var url = Uri.https('shop-app-d282d-default-rtdb.firebaseio.com',
+        '/products.json', _params);
     try {
       final response = await http.get(url);
-      final extractedData = json.decode(response.body) as Map<String, dynamic>?;
-
+      final extractedData = json.decode(response.body) as Map<String, dynamic>;
+      if (extractedData.isEmpty) {
+        _items = [];
+        return;
+      }
       url = Uri.parse(
           "https://shop-app-d282d-default-rtdb.firebaseio.com/userFavorites/$userId.json?auth=$authToken");
       final favoriteResponse = await http.get(url);
       final favoriteData = json.decode(favoriteResponse.body);
       final List<Product> loadedProducts = [];
-      extractedData?.forEach((prodId, prodData) {
+      extractedData.forEach((prodId, prodData) {
         loadedProducts.add(Product(
           id: prodId,
           title: prodData['title'],
           description: prodData['description'],
           price: prodData['price'],
-          isFavorite: favoriteData == null ? false : favoriteData[prodId] ?? false,
+          isFavorite:
+              favoriteData == null ? false : favoriteData[prodId] ?? false,
           imageUrl: prodData['imageUrl'],
         ));
       });
@@ -67,7 +83,7 @@ class Products with ChangeNotifier {
           'description': product.description,
           'imageUrl': product.imageUrl,
           'price': product.price,
-          'creatorId':userId,
+          'creatorId': userId,
         }),
       );
       final newProduct = Product(
@@ -109,7 +125,8 @@ class Products with ChangeNotifier {
     final url = Uri.parse(
         "https://shop-app-d282d-default-rtdb.firebaseio.com/products/$id.json?auth=$authToken");
     final existingProductIndex = _items.indexWhere((prod) => prod.id == id);
-    Product? existingProduct = _items[existingProductIndex];
+   var existingProduct;
+    existingProduct= _items[existingProductIndex];
 
     _items.removeAt(existingProductIndex);
     notifyListeners();
