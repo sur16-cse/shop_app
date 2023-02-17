@@ -64,14 +64,14 @@ class MyApp extends StatelessWidget {
                   builder: (ctx, authResultSnapshot) =>
                       authResultSnapshot.connectionState ==
                               ConnectionState.waiting
-                          ? SplashScreen()
-                          : AuthScreen(),
+                          ? const SplashScreen()
+                          : const AuthScreen(),
                   future: auth.tryAutoLogin(),
                 ),
           routes: {
             ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
             CartScreen.routeName: (ctx) => const CartScreen(),
-            OrdersScreen.routeName: (ctx) => OrdersScreen(),
+            OrdersScreen.routeName: (ctx) => const OrdersScreen(),
             UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
             EditProductScreen.routeName: (ctx) => const EditProductScreen(),
           },
